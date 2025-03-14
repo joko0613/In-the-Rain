@@ -1,0 +1,219 @@
+<!--
+==============================================================================
+雨中漫步 - 游戏主HTML文件
+==============================================================================
+
+文件结构：
+1. 头部元信息和样式引入
+2. 游戏容器和SVG画布
+   - 背景元素 (城市轮廓)
+   - 地面元素 (水坑)
+   - 角色和雨伞
+   - 特效容器 (雨滴、溅起效果等)
+3. UI元素
+   - 分数显示
+   - 体力条
+   - 开始和结束屏幕
+4. JavaScript模块引入
+-->
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雨中漫步 - Walking in the Rain (v2.0 模块化)</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <svg id="game-canvas" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+            <!-- 背景元素 - 注意顶部已完全填满 -->
+            <rect id="sky" x="0" y="0" width="800" height="600" fill="#2a2a2a" />
+            
+            <!-- 伦敦风格的城市和街道背景 -->
+            <g id="background-elements">
+                <g id="cityscape-container" transform="translate(0, 0)">
+                    <!-- 第一组伦敦轮廓 -->
+                    <g class="london-cityscape">
+                        <!-- 大本钟 -->
+                        <rect x="100" y="300" width="30" height="100" fill="#444" />
+                        <rect x="105" y="250" width="20" height="50" fill="#555" />
+                        <rect x="110" y="220" width="10" height="30" fill="#666" />
+                        <circle cx="115" cy="210" r="8" fill="#777" />
+                        
+                        <!-- 伦敦眼 -->
+                        <circle cx="200" cy="300" r="50" fill="none" stroke="#666" stroke-width="3" />
+                        <line x1="200" y1="250" x2="200" y2="350" stroke="#666" stroke-width="2" />
+                        <line x1="150" y1="300" x2="250" y2="300" stroke="#666" stroke-width="2" />
+                        
+                        <!-- 塔桥 -->
+                        <rect x="300" y="350" width="150" height="50" fill="#555" />
+                        <rect x="320" y="280" width="30" height="70" fill="#666" />
+                        <rect x="400" y="280" width="30" height="70" fill="#666" />
+                        
+                        <!-- 普通建筑 -->
+                        <rect x="0" y="380" width="50" height="70" fill="#444" />
+                        <rect x="60" y="350" width="30" height="100" fill="#555" />
+                        <rect x="500" y="320" width="60" height="130" fill="#444" />
+                        <rect x="570" y="350" width="40" height="100" fill="#555" />
+                        <rect x="620" y="370" width="70" height="80" fill="#444" />
+                        <rect x="700" y="330" width="60" height="120" fill="#555" />
+                        <rect x="770" y="360" width="30" height="90" fill="#444" />
+                        
+                        <!-- 街道 -->
+                        <rect x="0" y="450" width="800" height="20" fill="#333" />
+                        
+                        <!-- 灯柱 -->
+                        <rect x="50" y="420" width="2" height="30" fill="#777" />
+                        <circle cx="51" cy="420" r="3" fill="#ffff88" />
+                        <rect x="150" y="420" width="2" height="30" fill="#777" />
+                        <circle cx="151" cy="420" r="3" fill="#ffff88" />
+                        <rect x="250" y="420" width="2" height="30" fill="#777" />
+                        <circle cx="251" cy="420" r="3" fill="#ffff88" />
+                        <rect x="350" y="420" width="2" height="30" fill="#777" />
+                        <circle cx="351" cy="420" r="3" fill="#ffff88" />
+                        <rect x="450" y="420" width="2" height="30" fill="#777" />
+                        <circle cx="451" cy="420" r="3" fill="#ffff88" />
+                        <rect x="550" y="420" width="2" height="30" fill="#777" />
+                        <circle cx="551" cy="420" r="3" fill="#ffff88" />
+                        <rect x="650" y="420" width="2" height="30" fill="#777" />
+                        <circle cx="651" cy="420" r="3" fill="#ffff88" />
+                        <rect x="750" y="420" width="2" height="30" fill="#777" />
+                        <circle cx="751" cy="420" r="3" fill="#ffff88" />
+                    </g>
+                    
+                    <!-- 第二组伦敦轮廓(用于无缝循环) -->
+                    <g class="london-cityscape" transform="translate(800, 0)">
+                        <!-- 大本钟 -->
+                        <rect x="100" y="300" width="30" height="100" fill="#444" />
+                        <rect x="105" y="250" width="20" height="50" fill="#555" />
+                        <rect x="110" y="220" width="10" height="30" fill="#666" />
+                        <circle cx="115" cy="210" r="8" fill="#777" />
+                        
+                        <!-- 伦敦眼 -->
+                        <circle cx="200" cy="300" r="50" fill="none" stroke="#666" stroke-width="3" />
+                        <line x1="200" y1="250" x2="200" y2="350" stroke="#666" stroke-width="2" />
+                        <line x1="150" y1="300" x2="250" y2="300" stroke="#666" stroke-width="2" />
+                        
+                        <!-- 塔桥 -->
+                        <rect x="300" y="350" width="150" height="50" fill="#555" />
+                        <rect x="320" y="280" width="30" height="70" fill="#666" />
+                        <rect x="400" y="280" width="30" height="70" fill="#666" />
+                        
+                        <!-- 普通建筑 -->
+                        <rect x="0" y="380" width="50" height="70" fill="#444" />
+                        <rect x="60" y="350" width="30" height="100" fill="#555" />
+                        <rect x="500" y="320" width="60" height="130" fill="#444" />
+                        <rect x="570" y="350" width="40" height="100" fill="#555" />
+                        <rect x="620" y="370" width="70" height="80" fill="#444" />
+                        <rect x="700" y="330" width="60" height="120" fill="#555" />
+                        <rect x="770" y="360" width="30" height="90" fill="#444" />
+                        
+                        <!-- 街道 -->
+                        <rect x="0" y="450" width="800" height="20" fill="#333" />
+                        
+                        <!-- 灯柱 -->
+                        <rect x="50" y="420" width="2" height="30" fill="#777" />
+                        <circle cx="51" cy="420" r="3" fill="#ffff88" />
+                        <rect x="150" y="420" width="2" height="30" fill="#777" />
+                        <circle cx="151" cy="420" r="3" fill="#ffff88" />
+                        <rect x="250" y="420" width="2" height="30" fill="#777" />
+                        <circle cx="251" cy="420" r="3" fill="#ffff88" />
+                        <rect x="350" y="420" width="2" height="30" fill="#777" />
+                        <circle cx="351" cy="420" r="3" fill="#ffff88" />
+                        <rect x="450" y="420" width="2" height="30" fill="#777" />
+                        <circle cx="451" cy="420" r="3" fill="#ffff88" />
+                        <rect x="550" y="420" width="2" height="30" fill="#777" />
+                        <circle cx="551" cy="420" r="3" fill="#ffff88" />
+                        <rect x="650" y="420" width="2" height="30" fill="#777" />
+                        <circle cx="651" cy="420" r="3" fill="#ffff88" />
+                        <rect x="750" y="420" width="2" height="30" fill="#777" />
+                        <circle cx="751" cy="420" r="3" fill="#ffff88" />
+                    </g>
+                </g>
+            </g>
+            
+            <!-- 地面容器 - 可以独立移动 -->
+            <g id="ground-container" transform="translate(0, 0)">
+                <!-- 基本地面 -->
+                <rect id="ground" x="0" y="470" width="1600" height="130" fill="#333" />
+                
+                <!-- 地面上的积水和水坑 - 两组用于循环 -->
+                <g id="puddles-1">
+                    <ellipse cx="150" cy="471" rx="50" ry="8" fill="#445" />
+                    <ellipse cx="350" cy="471" rx="40" ry="6" fill="#445" />
+                    <ellipse cx="550" cy="471" rx="60" ry="7" fill="#445" />
+                    <ellipse cx="700" cy="471" rx="35" ry="5" fill="#445" />
+                </g>
+                <g id="puddles-2" transform="translate(800, 0)">
+                    <ellipse cx="180" cy="471" rx="45" ry="7" fill="#445" />
+                    <ellipse cx="380" cy="471" rx="38" ry="5" fill="#445" />
+                    <ellipse cx="580" cy="471" rx="55" ry="6" fill="#445" />
+                    <ellipse cx="730" cy="471" rx="40" ry="7" fill="#445" />
+                </g>
+            </g>
+            
+            <!-- 地面积水效果容器 -->
+            <g id="ground-splashes"></g>
+            
+            <!-- 角色和雨伞 -->
+            <g id="character-group" transform="translate(200, 430)">
+                <!-- 角色身体 -->
+                <g id="character">
+                    <rect id="body" x="-10" y="0" width="20" height="40" fill="#ddd" />
+                    <circle id="head" cx="0" cy="-10" r="10" fill="#ddd" />
+                </g>
+                
+                <!-- 整个雨伞组 -->
+                <g id="umbrella-group" transform="translate(10, -25)">
+                    <!-- 伞面 -->
+                    <path id="umbrella-canopy" d="M-30,0 C-30,-20 30,-20 30,0" stroke="#c00" stroke-width="2" fill="#c00" />
+                    
+                    <!-- J型伞柄 - 这个会随着旋转动态变化 -->
+                    <path id="umbrella-handle" d="M0,0 L0,20 C0,25 5,25 5,20 L5,18" stroke="#800" stroke-width="2" fill="none" />
+                </g>
+            </g>
+            
+            <!-- 雨滴容器 -->
+            <g id="raindrops"></g>
+            
+            <!-- 甩水效果容器 -->
+            <g id="splash-effects"></g>
+            
+            <!-- 雨滴轨迹效果 -->
+            <g id="raindrop-trails"></g>
+        </svg>
+        
+        <div id="score-display">分数: 0</div>
+        
+        <!-- 体力显示容器 -->
+        <div id="stamina-container">
+            <div id="stamina-label">体力值</div>
+            <div id="stamina-bar">
+                <div id="stamina-fill"></div>
+            </div>
+        </div>
+        <div id="stamina-change">+5</div>
+        
+        <div id="start-screen">
+            <h1>雨中漫步</h1>
+            <h2>Walking in the Rain</h2>
+            <button id="start-button">开始游戏</button>
+            <p>点击屏幕旋转雨伞，保护角色不被雨淋湿</p>
+            <p>雨伞会自然摆动，享受雨中漫步的乐趣</p>
+            <p>注意：旋转雨伞消耗体力，挡住雨滴回复体力！</p>
+        </div>
+        
+        <div id="end-screen" style="display: none;">
+            <h1>游戏结束</h1>
+            <div id="end-reason">你被雨淋湿了!</div>
+            <div id="end-score">分数: 0</div>
+            <button id="restart-button">再玩一次</button>
+        </div>
+    </div>
+
+    <!-- 模块化JavaScript文件引入 -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+/*
+==============================================================================
+雨中漫步 - 游戏样式表
+==============================================================================
+
+文件结构：
+1. 基础布局样式
+   - 游戏容器
+   - 画布设置
+2. UI元素样式
+   - 开始/结束屏幕
+   - 按钮样式
+   - 分数显示
+3. 体力系统UI
+   - 体力条
+   - 变化指示器
+4. 动画效果
+   - 体力警告闪烁
+*/
+
+/* 游戏基础样式 */
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #4a4a4a, #2a2a2a);
+}
+
+#game-canvas {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+#start-screen, #end-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    z-index: 10;
+}
+
+h1 {
+    font-size: 3em;
+    margin-bottom: 0.5em;
+}
+
+button {
+    padding: 1em 2em;
+    font-size: 1.5em;
+    background-color: #c00;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #e00;
+}
+
+#score-display {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 2em;
+    color: white;
+    z-index: 5;
+    user-select: none;
+}
+
+#stamina-container {
+    position: absolute;
+    top: 60px;
+    right: 10px;
+    width: 200px;
+    z-index: 5;
+    user-select: none;
+}
+
+#stamina-label {
+    color: white;
+    font-size: 1.5em;
+    margin-bottom: 5px;
+}
+
+#stamina-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #333;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#stamina-fill {
+    height: 100%;
+    width: 100%;
+    background-color: #4CAF50;
+    transition: width 0.3s, background-color 0.3s;
+}
+
+#stamina-change {
+    position: absolute;
+    right: 10px;
+    top: 90px;
+    color: white;
+    font-size: 1.2em;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.5s;
+}
+
+#end-score {
+    font-size: 2em;
+    margin: 0.5em 0 1em;
+}
+
+#end-reason {
+    font-size: 1.5em;
+    margin-bottom: 1em;
+    color: #ffcccc;
+}
+
+/* 体力警告闪烁动画 */
+@keyframes pulse {
+    0% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+.warning-flash {
+    animation: pulse 0.3s 3;
+}
