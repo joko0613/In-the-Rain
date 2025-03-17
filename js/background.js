@@ -14,12 +14,19 @@ import { elements } from './elements.js';
 import config from './config.js';
 
 // 移动背景
+// 修改后的代码
 function moveBackground() {
     // 更新背景位置
     game.background.x -= config.background.speed;
     
+    // 计算视口宽度与游戏宽度的比例
+    const viewportWidth = window.innerWidth;
+    const gameWidth = 800;
+    const widthRatio = viewportWidth / gameWidth;
+    
     // 当第一个背景完全移出屏幕时，重置位置实现无限循环
-    if (game.background.x <= -800) {
+    // 在宽屏幕上，需要考虑屏幕宽度因素
+    if (game.background.x <= -800 * Math.max(1, widthRatio)) {
         game.background.x = 0;
     }
     

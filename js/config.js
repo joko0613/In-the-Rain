@@ -88,24 +88,25 @@ const config = {
     },
     
     // 6. 游戏区域和难度
+    // 修改后的代码
     game: {
-        width: 800,                      // 游戏视口宽度
-        height: 600,                     // 游戏视口高度
+        width: window.innerWidth > 800 ? window.innerWidth : 800,  // 动态游戏视口宽度
+        height: window.innerHeight > 600 ? window.innerHeight : 600, // 动态游戏视口高度
         groundLevel: 470,                // 地面Y坐标
         difficultyIncrease: 0.1,         // 难度增加速率
         speedIncreaseInterval: 1000,     // 速度增加间隔（帧数）
-        
-        // 计分系统
-        scoreOnRotatingOnly: true        // 只有雨滴击中旋转中的雨伞才得分
-    },
+    
+    // 计分系统
+    scoreOnRotatingOnly: true        // 只有雨滴击中旋转中的雨伞才得分
+},
     
     // 7. 体力系统设置
     stamina: {
         max: 100,                        // 最大体力值
         initial: 100,                    // 初始体力值
         rotationCost: 10,                // 旋转雨伞消耗的体力
-        recoveryBase: 3,                 // 每个雨滴提供的基础恢复量
-        recoveryMultiplier: 0.5,         // 每额外击中一个雨滴的恢复倍率
+        recoveryBase: 15,                 // 每个雨滴提供的基础恢复量
+        recoveryMultiplier: 2,         // 每额外击中一个雨滴的恢复倍率
         lowWarningThreshold: 25,         // 低体力警告阈值
         criticalThreshold: 10,           // 危险体力阈值
         naturalDecay: 0.02,              // 自然体力衰减率(每帧)

@@ -24,10 +24,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>雨中漫步 - Walking in the Rain (v2.0 模块化)</title>
     <link rel="stylesheet" href="css/style.css">
+    <script>
+        // 添加窗口大小变化监听器，动态调整SVG视图
+        window.addEventListener('load', function() {
+            window.addEventListener('resize', adjustGameView);
+            adjustGameView(); // 初始化时也调整一次
+        });
+    
+        // 调整游戏视图以适应窗口大小
+        function adjustGameView() {
+            const gameCanvas = document.getElementById('game-canvas');
+            const container = document.getElementById('game-container');
+            
+            // 获取窗口和游戏容器的宽高比
+            const windowRatio = window.innerWidth / window.innerHeight;
+            const gameRatio = 800 / 600; // 游戏原始宽高比
+            
+            if (windowRatio > gameRatio) {
+                // 宽屏 - 根据视口宽度调整
+                const scaleFactor = window.innerWidth / 800;
+                gameCanvas.setAttribute('width', '100%');
+                gameCanvas.setAttribute('height', 'auto');
+                // 更新viewBox确保内容正确缩放
+                gameCanvas.setAttribute('viewBox', '0 0 800 600');
+            } else {
+                // 窄屏 - 根据视口高度调整
+                const scaleFactor = window.innerHeight / 600;
+                gameCanvas.setAttribute('width', 'auto');
+                gameCanvas.setAttribute('height', '100%');
+                // 更新viewBox确保内容正确缩放
+                gameCanvas.setAttribute('viewBox', '0 0 800 600');
+            }
+        }
+    </script>
 </head>
 <body>
     <div id="game-container">
-        <svg id="game-canvas" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+        <svg id="game-canvas" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" preserveAspectRatio="xMinYMid meet" width="100%" height="100%">
             <!-- 背景元素 - 注意顶部已完全填满 -->
             <rect id="sky" x="0" y="0" width="800" height="600" fill="#2a2a2a" />
             
